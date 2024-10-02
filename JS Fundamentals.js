@@ -151,9 +151,11 @@ const assignmentGroup = {
 };
 const learnerSubmissions = [
     { learner_id: 125, assignement_id: 1, submission: { submitted_at: "2023-01-25", score: 47}},
-    { learner_id: 125, assignement_id: 2, submission: { submitted_at: "2023-02-12"}}
-
-]
+    { learner_id: 125, assignement_id: 2, submission: { submitted_at: "2023-02-12"}},
+    { learner_id: 125, assignement_id: 3, submission: { submitted_at: "2023-03-27"}},
+    { learner_id: 132, assignment_id: 1, submission: { submitted_at: "2023-01-24", score: 50 } },
+  { learner_id: 132, assignment_id: 2, submission: { submitted_at: "2023-03-07", score: 140 } }
+];
 }
 
 
