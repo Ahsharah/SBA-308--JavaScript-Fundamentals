@@ -34,3 +34,21 @@ document.body.appendChild(div2)
 
 // Call the function to crate the structure
 createDOMStructure();
+
+
+//Description: Write a function named greet that takes a person's name as an argument and returns a greeting message with their name.
+/*1:54
+ex greet('jose') ''Hello, Jose"
+1:55
+2. Square a number
+ex square(4)  => 16
+1:57
+3. Convert Minutes to seconds
+ex: convertToSeconds(2) => 120
+1:57
+4. Simple calculator
+Description: write a function calculate that takes in 3 arguments: 2 numbers and a string representing the arithmetic operator ('*', '+', '-', '/').
+The function should perform the corresponding operation and return the result.
+Ex
+calculate(1, 3, '-') => -2
+calculate(5, 2 '*') => 10 (edited)*/

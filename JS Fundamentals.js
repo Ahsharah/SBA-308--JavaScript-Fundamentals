@@ -27,44 +27,17 @@
 */
 
 
-// Data Structure - Sample Data 
+// Data Structure - Sample Data
 
-const courseInfo = {
-    id: 0,
-    name:"",
-    course_id: 0,
-    group_weight: 0,
-    assignements: []
+// Main Function to process learner data
+function getLearnerData(courseInfro, assignmentGroup, learnerSubmissions) {
 
-};
-
-const learnerSubmissions = []
-
-// Main Function
-function getLearnerData (courseInfo, assignmentGroup, learnerSubmissions) {
     // Validate input data
-    if(assignmentGroup.course_id !==courseInfo.id{
-        throw new Error(Invalid input: AssignmentGroup does not belong to the specified courseInfo.")
-            
-        }
-
-
-const courseInfo = {
-    id:451,
-    name : "Introduction to JavaScript"
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    try {
+        validateInputData(courseInfo, assignmentGroup, learnerSubmissions);
+    } catch (error) {
+        console.error("Error validating input data:", error.message;
+            return {;}
+        )
+    }
 }
