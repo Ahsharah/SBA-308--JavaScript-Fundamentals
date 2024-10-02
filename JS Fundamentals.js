@@ -56,6 +56,19 @@ function validateInputData(courseInfo, assignmentGroup, learnerSubmissions) {
         throw new Error("Missing required input data");
     }
 }
+// Process assignments and create a map for easy access
+const assignmentMap = creatAssignmentMap(assignmentGroup.assignments);
+
+// Process learner submissions
+const learnerData = processLearnerSubmissions(learnerSubmissions, assignmentMap, assignmentGroup.group_weight);
+
+return learnerData;
+
+
+
+
+
+
 
 // Example usage (commented out for now)
 /*
