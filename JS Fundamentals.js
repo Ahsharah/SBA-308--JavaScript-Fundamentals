@@ -43,18 +43,16 @@ const learnerSubmissions = []
 // Main Function
 function getLearnerData (courseInfo, assignmentGroup, learnerSubmissions) {
     // Validate input data
-    if (!validateInputData (courseInfo, assignmentGroup, learnerSubmissions)) {
-        throw new Error ("Invalid input data");
-
-    }
- //Process learner submissions
-    const learnerData = processLearnerSubmissions (assignmentGroup, learnerSubmissions);
-    
+    if(assignmentGroup.course_id !==courseInfo.id{
+        throw new Error(Invalid input: AssignmentGroup does not belong to the specified courseInfo.")
+            
+        }
 
 
-
-
-
+const courseInfo = {
+    id:451,
+    name : "Introduction to JavaScript"
+};
 
 
 
