@@ -55,7 +55,7 @@ function validateInputData(courseInfo, assignmentGroup, learnerSubmissions) {
     if (!courseInfo || !assignmentGroup || !learnerSubmissions) {
         throw new Error("Missing required input data");
     }
-}
+
 // Process assignments and create a map for easy access
 const assignmentMap = creatAssignmentMap(assignmentGroup.assignments);
 
@@ -64,6 +64,14 @@ const learnerData = processLearnerSubmissions(learnerSubmissions, assignmentMap,
 
 return learnerData;
 
+}
+
+// Helper funtion to validate input data
+function validateInputData(courseInfro, assignmentGroup, learnerSubmissions) {
+    if (typeof courseInfo !== 'object' || typeof assignmentGroup !== 'object' || !Array.isArray(learnerSubmissions)) {
+    throw new Error("Invalid input data types");
+    }
+}
 
 
 
