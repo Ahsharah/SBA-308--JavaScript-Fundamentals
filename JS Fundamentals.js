@@ -77,7 +77,27 @@ function validateInputData(courseInfro, assignmentGroup, learnerSubmissions) {
     }
 }
 
+// Helper function to process learner submissions
+function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
+  const learnerData = new Map();
 
+  for (const submission of submissions) {
+    const learnerId = submission.learner_id;
+    const assignmentId = submission.assignment_id;
+    const assignment = assignmentMap.get(assignmentId);
+
+    if (!assignment) {
+      console.warn(`Assignment ${assignmentId} not found. Skipping submission.`);
+      continue;
+    }
+
+    if (!learnerData.has(learnerId)) {
+      learnerData.set(learnerId, {
+        id: learnerId,
+        totalWeightedScore: 0,
+        totalPointsPossible: 0,
+      });
+    }
 
 
 
