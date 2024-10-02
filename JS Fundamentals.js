@@ -136,6 +136,23 @@ function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
   });
 }
 
+const courseInfo = { id: 451, name:"Intro to JavaScript"};
+const assignmentGroup = {
+    id:12345,
+    name: "Fundamentals of JavaScript",
+    course_id: 451,
+    group_weight: 25,
+    assignments: [
+        { id: 1, name: "Declare Variables", due_at: "2023-01-25", points_possible: 50 },
+        { id: 2, name: "Write Functions", due_at: "2023-02-27", points_possible: 150 },
+        { id: 3, name: "Create Objects", due_at: "2023-03-26", points_possible: 100 }
+
+        }
+
+}
+        }
+    ]
+}
 
 
 // Example usage (commented out for now)
