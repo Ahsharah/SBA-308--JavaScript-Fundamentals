@@ -156,7 +156,19 @@ const learnerSubmissions = [
     { learner_id: 132, assignment_id: 1, submission: { submitted_at: "2023-01-24", score: 50 } },
   { learner_id: 132, assignment_id: 2, submission: { submitted_at: "2023-03-07", score: 140 } }
 ];
-}
+const result = getLearnerData(courseInfo, assignmentGroup, learnerSubmissions);
+console.log("Processed Learner Data:");
+result.forEach(learner => {
+  console.log(`Learner ID: ${learner.id}`);
+  console.log(`Average Score: ${learner.avg.toFixed(2)}%`);
+  for (const key in learner) {
+    if (key !== 'id' && key !== 'avg') {
+      console.log(`Assignment ${key} Score: ${(learner[key] * 100).toFixed(2)}%`);
+    }
+  }
+  console.log("---");
+});
+
 
 
 // Example usage (commented out for now)
