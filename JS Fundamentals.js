@@ -71,7 +71,12 @@ function validateInputData(courseInfro, assignmentGroup, learnerSubmissions) {
     if (typeof courseInfo !== 'object' || typeof assignmentGroup !== 'object' || !Array.isArray(learnerSubmissions)) {
     throw new Error("Invalid input data types");
     }
+
+    if (courseInfo.id !== assignmentGroup.course_id){
+        throw new Error("AssignmentGroup does not belong to the specified course");
+    }
 }
+
 
 
 
