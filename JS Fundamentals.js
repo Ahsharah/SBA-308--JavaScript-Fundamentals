@@ -99,7 +99,42 @@ function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
       });
     }
 
+    const learner = learnerData.get(learnerId);
+    const dueDate = new Date(assignment.due_at);
+    const submittedDate = new Date(submission.submission.submitted_at);
 
+    // Skip if assignment is not yet due
+    if (dueDate > new Date()) {
+      continue;
+    }
+
+    let score = submission.submission.score;
+    if (submittedDate > dueDate) {
+      // Late submission penalty
+      score -= assignment.points_possible * 0.1;
+    }
+
+    const percentage = score / assignment.points_possible;
+    learner[assignmentId] = percentage;
+
+    learner.totalWeightedScore += score;
+    learner.totalPointsPossible += assignment.points_possible;
+  }
+
+  // Calculate weighted averages and format output
+  return Array.from(learnerData.values()).map(learner => {
+    const avg = (learner.totalWeightedScore / learner.totalPointsPossible) * groupWeight;
+    const result = { id: learner.id, avg };
+    
+    for (const key in learner) {
+      if (typeof learner[key] === 'number' && key !== 'id' && key !== 'totalWeightedScore' && key !== 'totalPointsPossible') {
+        result[key] = learner[key];
+      }
+    }
+
+    return result;
+  });
+}
 
 
 
