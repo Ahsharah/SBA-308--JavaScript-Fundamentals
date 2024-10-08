@@ -62,7 +62,7 @@ const assignmentMap = creatAssignmentMap(assignmentGroup.assignments);
 // Process learner submissions
 const learnerData = processLearnerSubmissions(learnerSubmissions, assignmentMap, assignmentGroup.group_weight);
 
-return learnerData;
+return learnerData; 
 
 }
 
