@@ -1,14 +1,166 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <script src="JS Fundamentals.js"></script>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner Data Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        #output {
+            white-space: pre-wrap;
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Learner Data Analyzer</h1>
+        <button id="analyzeBtn">Analyze Learner Data</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+    // Your existing JavaScript code goes here
+    function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
+        try {
+            validateInputData(courseInfo, assignmentGroup, learnerSubmissions);
+        } catch (error) {
+            console.error("Error validating input data:", error.message);
+            return [];
+        }
+
+        const assignmentMap = createAssignmentMap(assignmentGroup.assignments);
+        return processLearnerSubmissions(learnerSubmissions, assignmentMap, assignmentGroup.group_weight);
+    }
+
+    function validateInputData(courseInfo, assignmentGroup, learnerSubmissions) {
+        if (typeof courseInfo !== 'object' || typeof assignmentGroup !== 'object' || !Array.isArray(learnerSubmissions)) {
+            throw new Error("Invalid input data types");
+        }
+
+        if (courseInfo.id !== assignmentGroup.course_id) {
+            throw new Error("AssignmentGroup does not belong to the specified course");
+        }
+    }
+
+    function createAssignmentMap(assignments) {
+        return new Map(assignments.map(assignment => [assignment.id, assignment]));
+    }
+
+    function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
+        const learnerData = new Map();
+
+        for (const submission of submissions) {
+            const learnerId = submission.learner_id;
+            const assignmentId = submission.assignment_id;
+            const assignment = assignmentMap.get(assignmentId);
+
+            if (!assignment) {
+                console.warn(`Assignment ${assignmentId} not found. Skipping submission.`);
+                continue;
+            }
+
+            if (!learnerData.has(learnerId)) {
+                learnerData.set(learnerId, {
+                    id: learnerId,
+                    totalWeightedScore: 0,
+                    totalPointsPossible: 0,
+                });
+            }
+
+            const learner = learnerData.get(learnerId);
+            const dueDate = new Date(assignment.due_at);
+            const submittedDate = new Date(submission.submission.submitted_at);
+
+            if (dueDate > new Date()) {
+                continue;
+            }
+
+            let score = submission.submission.score;
+            if (submittedDate > dueDate) {
+                score -= assignment.points_possible * 0.1;
+            }
+
+            const percentage = score / assignment.points_possible;
+            learner[assignmentId] = percentage;
+
+            learner.totalWeightedScore += score;
+            learner.totalPointsPossible += assignment.points_possible;
+        }
+
+        return Array.from(learnerData.values()).map(learner => {
+            const avg = (learner.totalWeightedScore / learner.totalPointsPossible) * groupWeight;
+            const result = { id: learner.id, avg };
+            
+            for (const key in learner) {
+                if (typeof learner[key] === 'number' && key !== 'id' && key !== 'totalWeightedScore' && key !== 'totalPointsPossible') {
+                    result[key] = learner[key];
+                }
+            }
+
+            return result;
+        });
+    }
+
+    // Sample data
+    const courseInfo = { id: 451, name: "Intro to JavaScript" };
+    const assignmentGroup = {
+        id: 12345,
+        name: "Fundamentals of JavaScript",
+        course_id: 451,
+        group_weight: 25,
+        assignments: [
+            { id: 1, name: "Declare Variables", due_at: "2023-01-25", points_possible: 50 },
+            { id: 2, name: "Write Functions", due_at: "2023-02-27", points_possible: 150 },
+            { id: 3, name: "Create Objects", due_at: "2023-03-26", points_possible: 100 }
+        ]
+    };
+    const learnerSubmissions = [
+        { learner_id: 125, assignment_id: 1, submission: { submitted_at: "2023-01-25", score: 47 } },
+        { learner_id: 125, assignment_id: 2, submission: { submitted_at: "2023-02-12", score: 150 } },
+        { learner_id: 125, assignment_id: 3, submission: { submitted_at: "2023-03-27", score: 95 } },
+        { learner_id: 132, assignment_id: 1, submission: { submitted_at: "2023-01-24", score: 50 } },
+        { learner_id: 132, assignment_id: 2, submission: { submitted_at: "2023-03-07", score: 140 } }
+    ];
+
+    // Function to display results
+    function displayResults() {
+        const result = getLearnerData(courseInfo, assignmentGroup, learnerSubmissions);
+        let output = "Processed Learner Data:\n\n";
+        result.forEach(learner => {
+            output += `Learner ID: ${learner.id}\n`;
+            output += `Average Score: ${learner.avg.toFixed(2)}%\n`;
+            for (const key in learner) {
+                if (key !== 'id' && key !== 'avg') {
+                    output += `Assignment ${key} Score: ${(learner[key] * 100).toFixed(2)}%\n`;
+                }
+            }
+            output += "---\n";
+        });
+        document.getElementById('output').textContent = output;
+    }
+
+    // Event listener for the analyze button
+    document.getElementById('analyzeBtn').addEventListener('click', displayResults);
+    </script>
+</body>
 </html>
