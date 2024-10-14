@@ -1,10 +1,9 @@
-/**
- * Main function to process learner data
- * @param {Object} courseInfo - Information about the course
- * @param {Object} assignmentGroup - Information about the assignment group
- * @param {Array} learnerSubmissions - Array of learner submissions
- * @returns {Array} Processed learner data
- */
+// Main function to process learner data
+// Parameters:
+// - courseInfo: Object containing information about the course
+// - assignmentGroup: Object containing information about the assignment group
+// - learnerSubmissions: Array of learner submission objects
+// Returns: Array of processed learner data objects
 function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
   try {
       validateInputData(courseInfo, assignmentGroup, learnerSubmissions);
@@ -16,12 +15,8 @@ function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
   }
 }
 
-/**
-* Helper function to validate input data
-* @param {Object} courseInfo - Information about the course
-* @param {Object} assignmentGroup - Information about the assignment group
-* @param {Array} learnerSubmissions - Array of learner submissions
-*/
+// Helper function to validate input data
+// Throws an error if the input data is invalid
 function validateInputData(courseInfo, assignmentGroup, learnerSubmissions) {
   if (typeof courseInfo !== 'object' || typeof assignmentGroup !== 'object' || !Array.isArray(learnerSubmissions)) {
       throw new Error("Invalid input data types");
@@ -31,22 +26,14 @@ function validateInputData(courseInfo, assignmentGroup, learnerSubmissions) {
   }
 }
 
-/**
-* Helper function to create a map of assignments
-* @param {Array} assignments - Array of assignments
-* @returns {Map} Map of assignments with assignment ID as key
-*/
+// Helper function to create a map of assignments
+// Returns a Map object with assignment ID as key and assignment object as value
 function createAssignmentMap(assignments) {
   return new Map(assignments.map(assignment => [assignment.id, assignment]));
 }
 
-/**
-* Helper function to process learner submissions
-* @param {Array} submissions - Array of learner submissions
-* @param {Map} assignmentMap - Map of assignments
-* @param {number} groupWeight - Weight of the assignment group
-* @returns {Array} Processed learner data
-*/
+// Helper function to process learner submissions
+// Returns an array of processed learner data objects
 function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
   const learnerData = new Map();
 
@@ -80,7 +67,7 @@ function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
       let score = submission.submission.score || 0;
       if (submittedDate > dueDate) {
           // Late submission penalty
-          score -= assignment.points_possible * 0.1;
+          score = Math.max(0, score - assignment.points_possible * 0.1);
       }
 
       const percentage = score / assignment.points_possible;
@@ -92,7 +79,7 @@ function processLearnerSubmissions(submissions, assignmentMap, groupWeight) {
 
   // Calculate weighted averages and format output
   return Array.from(learnerData.values()).map(learner => {
-      const avg = (learner.totalWeightedScore / learner.totalPointsPossible) * groupWeight;
+      const avg = (learner.totalWeightedScore / learner.totalPointsPossible) * (groupWeight / 100);
       const result = { id: learner.id, avg };
       
       for (const key in learner) {
@@ -126,7 +113,10 @@ const learnerSubmissions = [
   { learner_id: 132, assignment_id: 2, submission: { submitted_at: "2023-03-07", score: 140 } }
 ];
 
+// Process the learner data
 const result = getLearnerData(courseInfo, assignmentGroup, learnerSubmissions);
+
+// Display the results
 console.log("Processed Learner Data:");
 result.forEach(learner => {
   console.log(`Learner ID: ${learner.id}`);
